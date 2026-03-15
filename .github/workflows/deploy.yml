@@ -81,29 +81,10 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-              docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-              docker stop myapp || true
-              docker rm myapp || true
-              docker run -d \
-              --name myapp \
-              -p 80:8080 \
-              -e HOST=localhost \
-              ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-            if ! systemctl is-active --quiet myapp.service; then
-              echo "[Unit]
-              Description=My App Container
-              After=docker.service
-              [Service]
-              ExecStart=/usr/bin/docker start -a myapp
-              ExecStop=/usr/bin/docker stop myapp
-              Restart=always
-              RestartSec=5s
-              [Install]
-              WantedBy=multi-user.target" | sudo tee /etc/systemd/system/myapp.service
-              sudo systemctl daemon-reload
-              sudo systemctl enable myapp.service
-            fi
-            sudo systemctl restart myapp.service
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+            docker stop myapp || true
+            docker rm myapp || true
+            docker run -d --env-file /home/test/.env --name myapp -p 8080:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           EOF
 #  deploy:
 #    runs-on: ubuntu-latest
