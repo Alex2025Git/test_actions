@@ -94,15 +94,11 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          
-          cd app/
-#          git pull
-
+          cd app
           docker compose pull
           docker compose down
           docker compose up -d --build
-          docker compose run backend python manage.py migrate
-          
+          docker compose run backend python manage.py migrate 
           EOF
 #  deploy:
 #    runs-on: ubuntu-latest
