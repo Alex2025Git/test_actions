@@ -20,12 +20,12 @@ class CourseViewSet(ModelViewSet):
         return CourseSerializer
 
     def update(self, request, *args, **kwargs):
-        course = get_object_or_404(Course, pk=kwargs.get('pk'))
+        course = get_object_or_404(Course, pk=kwargs.get("pk"))
         serializer = self.get_serializer(course, data=request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
-            subscription_update.delay(kwargs.get('pk'))
+            subscription_update.delay(kwargs.get("pk"))
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

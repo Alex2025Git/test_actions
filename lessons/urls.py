@@ -1,10 +1,15 @@
 from django.urls import path
 
 from lessons.apps import LessonsConfig
-from lessons.views import (LessonCreateAPIView, LessonDestroyAPIView,
-                           LessonListAPIView, LessonRetrieveAPIView,
-                           LessonUpdateAPIView, SubscriptionAPIView,
-                           SubscriptionListAPIView)
+from lessons.views import (
+    LessonCreateAPIView,
+    LessonDestroyAPIView,
+    LessonListAPIView,
+    LessonRetrieveAPIView,
+    LessonUpdateAPIView,
+    SubscriptionAPIView,
+    SubscriptionListAPIView,
+)
 
 app_name = LessonsConfig.name
 
