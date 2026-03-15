@@ -80,41 +80,52 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-#      - name: Upload docker-compose.yml to server
-#        uses: appleboy/scp-action@v0.1.7
-#        with:
-#          host: ${{ secrets.SERVER_IP }}
-#          username: ${{ secrets.SSH_USER }}
-#          key: ${{ secrets.SSH_KEY }}
-#          source: docker-compose.yml  # путь к файлу в репозитории
-#          target: /app/habit_tracker/
+      - name: Docker Compose CI
+      - on:
+      - push:
+      - branches: [ main, develop ]
+      - pull_request:
+      - branches: [ main, develop ]
 
-      - name: Deploy to Server
-        env:
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          cd app
-          docker compose pull
-          docker compose down
-          docker compose up -d --build
-          docker compose run backend python manage.py migrate 
-          EOF
-#  deploy:
-#    runs-on: ubuntu-latest
-#    needs: build
-#
-#    steps:
-#    - name: Set up SSH
-#      uses: webfactory/ssh-agent@v0.9.1
-#      with:
-#        ssh-private-key: ${{ secrets.SSH_KEY }}
-#
-#    - name: Deploy to Server
-#      run: |
-#        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-#          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-#          docker stop myapp || true
-#          docker rm myapp || true
-#          docker run -d --env-file /home/test/.env --name myapp -p 8080:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-#        EOF
+      - jobs:
+      - test:
+      - runs-on: ubuntu-latest
+      - steps:
+      - name: Checkout code
+      - uses: actions/checkout@v2
+
+      - name: Build containers
+      - run: docker-compose build
+
+      - name: Start containers
+      - run: docker-compose up -d
+
+      - name: Wait for services to be ready
+      - run: |
+      - # Ждем 10 секунд для инициализации сервисов
+      - sleep 10
+      - # Проверяем, что все сервисы запущены и здоровы
+      - docker-compose ps
+
+      - name: Run tests
+      - run: docker-compose exec -T app npm test
+
+      - name: Show logs on failure
+      - if: failure()
+      - run: docker-compose logs
+
+      - name: Stop containers
+      - if: always()
+      - run: docker-compose down
+
+
+
+
+
+
+
+
+
+
+
+
