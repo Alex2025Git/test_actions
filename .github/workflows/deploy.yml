@@ -33,7 +33,6 @@ jobs:
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}  # ← должно совпадать с ${NAME} из .env
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}  # ← должно совпадать с ${USER} из .env
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}  # ← должно совпадать с ${PASSWORD} из .env
-          POSTGRES_HOST_AUTH_METHOD: md5
         ports:
           - 5432:5432
         options: >-
@@ -73,7 +72,7 @@ jobs:
           done
           exit 1
         env:
-            PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+            POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
       - name: Run migrations
         env:
