@@ -30,10 +30,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -134,8 +133,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "static/"
-
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = BASE_DIR / "media/"
 MEDIA_URL = "media/"
 
 EMAIL_HOST = os.getenv("MAIL_EMAIL_HOST")
@@ -164,20 +162,21 @@ SIMPLE_JWT = {
 }
 
 STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")
+REDIS_URL = os.getenv("REDIS_URL")
 
 # Celery Configuration Options
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
-CELERY_BEAT_SCHEDULE = {
-    "check_inactive_users": {
-        "task": "users.tasks.check_inactive_users",  # Путь к задаче
-        "schedule": timedelta(
-            seconds=10
-        ),  # Расписание выполнения задачи (например, один раз в день)
-    },
-}
+# CELERY_BEAT_SCHEDULE = {
+#     "check_inactive_users": {
+#         "task": "users.tasks.check_inactive_users",  # Путь к задаче
+#         "schedule": timedelta(
+#             seconds=10
+#         ),  # Расписание выполнения задачи (например, один раз в день)
+#     },
+# }
 
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
