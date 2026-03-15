@@ -78,11 +78,11 @@ jobs:
       - name: Run migrations
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          NAME: ${{ secrets.POSTGRES_DB }}
-          PG_USER: ${{ secrets.POSTGRES_USER }}
-          PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          HOST: 127.0.0.1
-          PORT: "5432"
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
         run: python manage.py migrate
 
       - name: Run tests
