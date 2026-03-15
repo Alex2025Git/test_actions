@@ -95,6 +95,9 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           
+          cd app/
+#          git pull
+
           docker compose pull
           docker compose down
           docker compose up -d --build
