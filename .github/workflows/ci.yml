@@ -1,6 +1,6 @@
 name: Django CI
 
-on: [ push ]
+on: [push, pull_request]
 
 env:
   SECRET_KEY: ${{ secrets.SECRET_KEY }}
@@ -80,9 +80,9 @@ jobs:
 
     - name: Deploy to Server
       run: |
-        sh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           docker stop myapp || true
           docker rm myapp || true
-          docker run -d --env-file /home/test2/.env --name myapp -p 8080:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+          docker run -d --env-file /home/test/.env --name myapp -p 8080:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
         EOF

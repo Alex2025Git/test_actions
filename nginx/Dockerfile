@@ -1,5 +1,7 @@
 FROM nginx:latest
 
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d
-COPY proxy_params /etc/nginx
+RUN mkdir -p /app/staticfiles
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
