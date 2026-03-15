@@ -79,7 +79,7 @@ jobs:
         ssh-private-key: ${{ secrets.SSH_KEY }}
     - name: Deploy to server
       run: |
-        ssh user@your-server-ip "cd /path/to/app && git pull && docker-compose up -d"
+        ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "cd /path/to/app && git pull && docker-compose up -d"
 #    - name: Deploy to Server
 #      run: |
 #        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
