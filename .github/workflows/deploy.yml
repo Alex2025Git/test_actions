@@ -73,14 +73,14 @@ jobs:
     needs: build
 
     steps:
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.9.1
-      with:
-        ssh-private-key: ${{ secrets.SSH_KEY }}
-    - name: Deploy to Server
-      run: |
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Deploy to Server
+        run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-#            Деплой контейнера
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
             sudo docker stop myapp || true
             sudo docker rm myapp || true
@@ -89,7 +89,6 @@ jobs:
               -p 80:8080 \
               -e HOST=localhost \
               ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-#             Настройка systemd (если сервис ещё не существует)
             if ! systemctl is-active --quiet myapp.service; then
               echo "[Unit]
               Description=My App Container
@@ -104,17 +103,5 @@ jobs:
               sudo systemctl daemon-reload
               sudo systemctl enable myapp.service
             fi
-        # Перезапуск сервиса
             sudo systemctl restart myapp.service
           EOF
-#    - name: Deploy to server
-#      run: |
-#        ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "cd /path/to/app && git pull && docker-compose up -d"
-#    - name: Deploy to Server
-#      run: |
-#        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-#          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-#          docker stop myapp || true
-#          docker rm myapp || true
-#          docker run -d --env-file /home/test/.env --name myapp -p 8080:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-#        EOF
